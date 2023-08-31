@@ -18,7 +18,7 @@ def filter_fasta_by_keywords(fasta_file, search_words, output_file):
                 # Check if all search words are present in the header
                 if all(word in header for word in search_words):
                     output_fasta.write(f">{header}\n{sequence}\n")
-
+                    # No need to print header, it's already shown in the tqdm loading bar
     print(f"The filtered sequences are wrritten to {output_file}")
 
 
@@ -42,6 +42,8 @@ def filter_fasta_by_acc2taxid(input_fasta, output_fasta, table_file):
                 if identifier in values_to_filter:
                     output_handle.write(f">{header}\n{sequence}\n")
     print(f"The filtered sequences are wrritten to {output_fasta}")
+
+
 
 
 # Filter fasta by list of keywords and acc2taxid
@@ -68,6 +70,16 @@ def filter_fasta_by_acc2taxid_and_keywords(input_fasta, output_fasta, table_file
 
 
 
+
+
+
+
+
+
+
+
+
+
 def filter_acc2taxid_by_table(acc2taxid_path, acc2taxid_path2, taxidList_path, filtered_acc2taxid_path):
     target_taxids = set()
     
@@ -77,9 +89,7 @@ def filter_acc2taxid_by_table(acc2taxid_path, acc2taxid_path2, taxidList_path, f
             target_taxids.add(taxid)
 
     with gzip.open(acc2taxid_path, "rt") as acc2taxid_file, \
-        gzip.open(filtered_acc2taxid_path, "wt") as filtered_acc2taxid_file:
-        filtered_acc2taxid_file.write("accession\taccession.version\ttaxid\tgi\n")
-        
+         gzip.open(filtered_acc2taxid_path, "wt") as filtered_acc2taxid_file:
 
         for line in tqdm(acc2taxid_file, desc="Processing acc2taxid", unit=" lines"):
             ver, acc, taxid, gi = line.strip().split("\t")

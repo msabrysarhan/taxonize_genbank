@@ -19,10 +19,23 @@ from tqdm import tqdm
 
 
 def check_input(input_param, input_db, out):
-    "This function checks the input paramters teken from the argparser"
-    "and if needed database is not given the function will call the "
-    "other function 'download_db' to download that missing db and will"
-    "return the downloaded path"
+    """
+    This function checks the input paramters teken from the argparser
+    and if needed database is not given the function will call the
+    other function 'download_db' to download that missing db and will
+    return the downloaded path.
+
+    Params
+    ------
+    input_param: list
+        ajdnljafbdksa
+
+    Return
+    ------
+    abdjhafbsdf
+
+    """
+    
     if input_param == False:
         return download_db(input_db, out)
     elif input_param != False:
@@ -114,37 +127,7 @@ def get_all_subtaxids(taxonomic_graph, input_taxid):
     return sub_taxids
 
 
-def filter_fasta_by_acc2taxid(fasta_path, filtered_acc2taxid_path, filtered_fasta_path):
-    filtered_acc2taxid_dict = {}
-    with gzip.open(filtered_acc2taxid_path, "rt") as filtered_acc2taxid_file:
-        for line in filtered_acc2taxid_file:
-            acc, taxid = line.strip().split("\t")
-            filtered_acc2taxid_dict[acc] = taxid
 
-    with gzip.open(fasta_path, "rt") as fasta_file, \
-         gzip.open(filtered_fasta_path, "wt") as filtered_fasta_file:
-
-        current_sequence = []
-        current_acc = None
-
-        for line in tqdm(fasta_file, desc="Processing FASTA", unit=" lines"):
-            line = line.strip()
-
-            if line.startswith(">"):
-                if current_sequence and current_acc in filtered_acc2taxid_dict:
-                    filtered_fasta_file.write(f">{current_acc}\n")
-                    filtered_fasta_file.write("\n".join(current_sequence) + "\n")
-
-                current_sequence = []
-                current_acc = line[1:].split()[0]
-            else:
-                current_sequence.append(line)
-
-        if current_sequence and current_acc in filtered_acc2taxid_dict:
-            filtered_fasta_file.write(f">{current_acc}\n")
-            filtered_fasta_file.write("\n".join(current_sequence) + "\n")
-
-    print("Filtered FASTA file written:", filtered_fasta_path)
 
 def main():
     parser = argparse.ArgumentParser(description="Filter NCBI nt/nr database based on a given taxid.")
@@ -152,7 +135,7 @@ def main():
     parser.add_argument("--db_path", required=False, help="Path to nt/nr gzipped fasta file (if not provided, the latest version will be downloaded from the NCBI (must be provided with --db)", default=False)
     parser.add_argument("--taxdb", required=False, help="Path to gzipped taxonomy database from the NCBI (if not provided, the latest version will be downloaded from the NCBI", default=False)
     parser.add_argument("--prot_acc2taxid", required=False, help="Path to gzipped GenBank protein accession number to taxid mapping file from the NCBI; works with --db nr (if not provided, the latest version will be downloaded from the NCBI", default=False)
-    parser.add_argument("--pdb_acc2taxid", required=False, help="Path to gzipped PDB protein accession number to taxid mapping file from the NCBI; works with --db nr (if not provided, the latest version will be downloaded from the NCBI")
+    parser.add_argument("--pdb_acc2taxid", required=False, help="Path to gzipped PDB protein accession number to taxid mapping file from the NCBI; works with --db nr (if not provided, the latest version will be downloaded from the NCBI", default=False)
     parser.add_argument("--nucl_gb_acc2taxid", required=False, help="Path to gzipped Genbank nucleotide accession number to taxid mapping file from the NCBI; works with --db nt (if not provided, the latest version will be downloaded from the NCBI", default=False)
     parser.add_argument("--nucl_wgs_acc2taxid", required=False, help="Path to gzipped whole genome sequence accession number to taxid mapping file from the NCBI; works with --db nt (if not provided, the latest version will be downloaded from the NCBI", default=False)
     parser.add_argument("--taxid", required=False, help="Target taxonomy ID to filter for", default=1)
@@ -223,9 +206,6 @@ def main():
 
     
     # --removetemp
-
-    
-    # filter_fasta_by_acc2taxid(args.fasta, args.filteredAcc2taxid, args.filteredFasta)
     
 '''
 if __name__ == "__main__":
