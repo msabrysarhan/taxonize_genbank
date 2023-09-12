@@ -1,7 +1,8 @@
 """
-Script Name: filter_db_by_taxid.py
-Description: This script filters db (nt/nr) database based on a given taxid.
+Script Name: taxonize_gb.py
+Description: This script filters db (nt/nr) database based on a given taxid and optionally keywords.
 Author: Mohamed S. Sarhan
+Affiliation: Institute for Biomedicine, Eurac Research, Bolzano 39100, Italy
 Contact: mohamed.sarhan@eurac.edu; m.sabrysarhan@gmail.com
 Date Created: August 21, 2023
 Version: 1.0
@@ -17,32 +18,42 @@ import networkx as nx
 from tqdm import tqdm
 
 
-
 def check_input(input_param, input_db, out):
     """
-    This function checks the input paramters teken from the argparser
-    and if needed database is not given the function will call the
-    other function 'download_db' to download that missing db and will
-    return the downloaded path.
-
-    Params
-    ------
-    input_param: list
-        ajdnljafbdksa
-
-    Return
-    ------
-    abdjhafbsdf
-
-    """
+    This function checks the input paramters provided by the user.
+     
+    If the input parameter is given by the user the function returns
+    a string of the path the user provided, and if not, it will recall
+    the function 'download_db' to download that database from the 
+    genebank to the specified output directory and will return the 
+    path of the downloaded file in the output directory. 
     
+    Args:
+        input_parm (string): relative or absolute path to a database file.
+        input_db (string): database name as spicieifed in the help.
+        out (string): reltive or absolute path to the directory spicified by the user.
+    
+    Returns:
+        A string of either the path provided by the user or the path of the
+        downloaded database.
+    """
     if input_param == False:
         return download_db(input_db, out)
     elif input_param != False:
         print(f"database is provided in {input_param}")
         return input_param
 
+
 def check_db(db):
+    """"
+    This function checks which NCBI FASTA database the user specified as input. 
+    Whatever the user specifies, it will return the name of the database in 
+    lowercase letters.
+
+    Raises:
+        If the user provided any database name other than nt ot nr, it will 
+        return an error message and exit.
+    """
     if str(db).lower() == "nt" or str(db).lower() == "nucleotide":
         print("You have chosen NCBI non-redundant nucleotide database (nt)")
         return "nt"
@@ -53,20 +64,21 @@ def check_db(db):
         print(f" {db} is not a valid option, please use either 'nt' or 'nr'")
         exit
 
-def check_db_path(db, db_path, out):
-    print("\nChecking the provided reference database ...")
-    # First, we need to check whether the nr database is provided or not
-    # If not, we need to download it.
-    db_name = check_db(db)
-    if db_path == False:
-        print("No reference database path provided.\n")
-        return download_db(db, out)
-    # If the nr is provided, then print the path and continue to the next step.
-    elif db_path != False:
-        print(f"{db_name} database is provided in {db_path}")
-        return db_path
 
 def list_files_with_extension(directory, extension):
+    """"
+    This function lists all files with a given extension in a
+    directory and store them in a dictionary.
+
+    Args:
+        directory (string): relative or absolute path to a directory.
+        extension (string): extension of the files (with or without '.').
+    
+    Returns:
+        A dictionary of all files having that extension in the given directory.
+        The keys are the file names without the extensions, and the values are
+        the absolute path to those files.
+    """
     files = {}
     for filename in os.listdir(directory):
         if filename.endswith(extension):
@@ -76,13 +88,27 @@ def list_files_with_extension(directory, extension):
             files[file_base] = absolute_path
     return files
 
+
 def check_taxdb(taxdb, out):
+    """
+    This function takes the path to the NCBI taxonomy database as input
+    and untar it to the output directory provided by the user, then 
+    returns a dictionary of its components (i.e., files end with .dmp). 
+    """
     with tarfile.open(taxdb) as tar:
         tar.extractall(path=out)
         print(f"Extraction of taxdb files to {out} is complete")
         return list_files_with_extension(out, "dmp")
 
+
 def read_nodes_dmp(nodes_dmp_path):
+    """
+    This function reads the nodes.dmp file of the NCBI taxonomy database.
+    Then it creates a dictionry of taxids as keys and parent taxids as values.
+    Returns:
+        dictionary of taxid to parents
+        dictionary of rank map (taxids as keys, ranks as values).
+    """
     taxid_to_parent = {}
     rank_map = {}
 
@@ -100,6 +126,12 @@ def read_nodes_dmp(nodes_dmp_path):
     return taxid_to_parent, rank_map
 
 def read_names_dmp(names_dmp_path):
+    """
+    This function reads the names.dmp file of the NCBI taxonomy database.
+    Then it creates a dictionry of taxids to scientific names.
+    Returns:
+        dictionary of taxids to names (taxids as keys, names as values).
+    """
     taxid_to_name = {}
 
     with open(names_dmp_path, "r") as names_file:
@@ -116,12 +148,26 @@ def read_names_dmp(names_dmp_path):
     return taxid_to_name
 
 def build_taxonomic_graph(taxid_to_parent):
+    """
+    This function takes a dictionary of taxids to parents and reads it 
+    and returns it in a graph strcture.
+    """
     G = nx.DiGraph()
     for child_taxid, parent_taxid in taxid_to_parent.items():
         G.add_edge(parent_taxid, child_taxid)
     return G
 
 def get_all_subtaxids(taxonomic_graph, input_taxid):
+    """
+    This function extracts all children taxids for a given taxid.
+
+    Args:
+        taxonomic_graph (graph): graph structure of taxids.
+        input_taxid (integer): taxid of interest.
+
+    Returns:
+        list of children taxids
+    """
     sub_taxids = nx.descendants(taxonomic_graph, input_taxid)
     sub_taxids.add(input_taxid)
     return sub_taxids
@@ -198,16 +244,6 @@ def main():
         print("Received keywords:", keywords)
         filter_fasta_by_acc2taxid_and_keywords(ref_db, filteredFasta, filteredAcc2taxid, keywords)
 
-
-'''
-    filteredFasta = os.path.join(args.out, f"taxid{args.taxid}_{db_name}.fasta.gz")
-    filter_fasta_by_acc2taxid(db_fasta, filteredAcc2taxid, filteredFasta)
-    #filter_fasta_by_acc2taxid(nr_fasta, filteredAcc2taxid, filteredFasta)
-
-    
-    # --removetemp
-    
-'''
 if __name__ == "__main__":
     main()
 

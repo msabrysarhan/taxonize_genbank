@@ -7,6 +7,28 @@ Taxonize_genbank is a set of python-based scripts to download, filter, and curat
 
 This project requires the following software and libraries:
 
+
+
+import os 
+import argparse
+import hashlib
+import subprocess
+import gzip
+from Bio import SeqIO
+from tqdm import tqdm
+from ete3 import NCBITaxa
+from collections import defaultdict
+from get_db import databases, download_db, check_out_directory
+from utils.filter_utils import filter_acc2taxid_by_table, filter_fasta_by_acc2taxid_and_keywords, filter_fasta_by_acc2taxid
+import os 
+import argparse
+import tarfile
+import gzip
+import networkx as nx
+from tqdm import tqdm
+
+
+
 - Python 3.7 or higher
 - argparse 1.4.0 or higher (https://docs.python.org/3/library/argparse.html)
 - networkx (https://networkx.org/)
@@ -16,7 +38,14 @@ This project requires the following software and libraries:
 - gzip
 - tqdm
 - 
-- 
+- from get_db import databases, download_db, check_out_directory
+from utils.filter_utils import filter_acc2taxid_by_table, filter_fasta_by_acc2taxid_and_keywords, filter_fasta_by_acc2taxid
+import os 
+import argparse
+import tarfile
+import gzip
+import networkx as nx
+from tqdm import tqdm
 - 
 - 
 - 

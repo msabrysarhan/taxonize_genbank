@@ -2,8 +2,9 @@
 Script Name: get_db_py.py
 Description: This script downloads any given db from the genbank.
 Author: Mohamed S. Sarhan
+Affiliation: Institute for Biomedicine, Eurac Research, Bolzano 39100, Italy
 Contact: mohamed.sarhan@eurac.edu; m.sabrysarhan@gmail.com
-Date Created: August 23, 2023
+Date Created: August 21, 2023
 Version: 1.0
 """
 # Python modules to be imported and used in this script
@@ -37,8 +38,21 @@ def check_out_directory(directory_name):
 
 
 def download_db(db, out):
-    print(f"The {db} will bw downloaded to {out}")
+    """
+    This function download NCBI databases to a specified output directory.
+    It downloads the database and its MD5 hashes and checkes the file integrity
+    after download, then returns the downloaded path. 
+
+    Args:
+        db (string): names of the database to be downloaded. It must be present 
+        in the dictionary 'databases'
+        out (string): output directory where the output is to be stored.
+
+    Returns:
+        path to the downloaded database path.
+    """
     if db in databases:
+        print(f"The {db} will bw downloaded to {out}")
         try:
             db_url = databases[db][0]
             wget_command = ['wget', '-c', db_url, '-O', os.path.join(out, os.path.basename(db_url))]

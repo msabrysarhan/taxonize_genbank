@@ -2,13 +2,24 @@ import gzip
 from collections import defaultdict
 from tqdm import tqdm  # Import tqdm for loading bars
 from ete3 import NCBITaxa
-# Function to retrieve full lineage using taxid (replace this with your actual function)
-def get_full_lineage(taxid):
+import argparse
+
+
+def get_main_taxonomic_levels(taxid):
     ncbi = NCBITaxa()
     lineage = ncbi.get_lineage(taxid)
     names = ncbi.get_taxid_translator(lineage)
-    full_lineage_names = [names[taxid].replace(" ", "_") for taxid in lineage]
-    return ";".join(full_lineage_names)
+
+    main_levels = ['domain', 'kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species']
+    main_lineage_names = []
+
+    for taxid in lineage:
+        name = names.get(taxid, "").replace(" ", "_")
+        rank = ncbi.get_rank([taxid]).get(taxid, "")
+        if rank in main_levels:
+            main_lineage_names.append(f"{name}")
+
+    return ";".join(main_lineage_names)
 
 
 def parse_acc2taxonomy(acc2tax_file):
@@ -19,21 +30,26 @@ def parse_acc2taxonomy(acc2tax_file):
             acc2tax[fields[1]] = fields[2]
     return acc2tax
 
-def main(fasta_file, acc2tax_file, output_file):
+def taxonomize(fasta_file, acc2tax_file, output_file):
     acc2tax = parse_acc2taxonomy(acc2tax_file)
 
     with gzip.open(fasta_file, 'rt') as fasta, open(output_file, 'w') as output:
         for line in tqdm(fasta, desc="Processing FASTA"):
             if line.startswith('>'):
-                accession = line.strip().split()[0][1:]  # Extract accession from the header
+                accession = line.strip().split()[0][1:]
                 if accession in acc2tax:
                     taxid = acc2tax[accession]
-                    lineage = get_full_lineage(taxid)
+                    lineage = get_main_taxonomic_levels(taxid)
                     output.write(f"{accession}\t{taxid}\t{lineage}\n")
 
-if __name__ == "__main__":
-    fasta_file = "/home/msarhan/test_taxonize_PlantITS/taxid33090_nt.fasta.gz"  # Replace with your input FASTA file
-    acc2tax_file = "/home/msarhan/test_taxonize_PlantITS/taxid33090_nt.accession2taxid.gz"  # Replace with your input acc2taxonomy file
-    output_file = "/home/msarhan/test_taxonize_PlantITS/taxid33090_nt.taxonomy.tsv"  # Replace with the desired output file name
+def main():
+    parser = argparse.ArgumentParser(description="Get taxonomic lineages of FASTA accessions.", formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument("--fasta", required=True, help="NCBI FASTA file to be filtered.", default=False)
+    parser.add_argument("--map", required=True, help="Accession number to taxonomy IDs gzipped mapping file.", default=False)
+    parser.add_argument("--out", required=True, help="Path to output file to write the taxonomic lineages of the GenBank accession numbers.", default=False)
+    args = parser.parse_args()
     
-    main(fasta_file, acc2tax_file, output_file)
+    taxonomize(args.fasta, args.map, args.out)
+
+if __name__ == "__main__":
+    main()
