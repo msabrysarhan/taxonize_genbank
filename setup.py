@@ -6,7 +6,7 @@ setup(
     description='Python package to download and filter GenBank database based on taxonomy',
     author='Mohamed S. Sarhan',
     author_email='mohamed.sarhan@eurac.edu',
-    url='https://github.com/msabrysarhan/taxonize_genebank',
+    url='https://github.com/msabrysarhan/taxonize_genbank',
     packages=find_packages(),
     install_requires=[
         'biopython==1.81',
