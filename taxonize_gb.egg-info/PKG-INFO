@@ -1,0 +1,7 @@
+Metadata-Version: 2.1
+Name: taxonize-gb
+Version: 1.0.0
+Summary: Python package to download and filter GenBank database based on taxonomy
+Home-page: https://github.com/msabrysarhan/taxonize_genebank
+Author: Mohamed S. Sarhan
+Author-email: mohamed.sarhan@eurac.edu
