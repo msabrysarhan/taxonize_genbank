@@ -1,5 +1,6 @@
+#!/usr/bin/env python3
 """
-Script Name: get_db_py.py
+Script Name: get_db.py
 Description: This script downloads any given db from the genbank.
 Author: Mohamed S. Sarhan
 Affiliation: Institute for Biomedicine, Eurac Research, Bolzano 39100, Italy

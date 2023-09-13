@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 Script Name: taxonize_gb.py
 Description: This script filters db (nt/nr) database based on a given taxid and optionally keywords.
@@ -8,8 +9,8 @@ Date Created: August 21, 2023
 Version: 1.0
 """
 # Python modules to be imported and used in this script
-from get_db import databases, download_db, check_out_directory
-from utils.filter_utils import filter_acc2taxid_by_table, filter_fasta_by_acc2taxid_and_keywords, filter_fasta_by_acc2taxid
+#from utils.get_db import databases, download_db, check_out_directory
+#from utils.filter_utils import filter_acc2taxid_by_table, filter_fasta_by_acc2taxid_and_keywords, filter_fasta_by_acc2taxid
 import os 
 import argparse
 import tarfile

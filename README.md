@@ -98,5 +98,10 @@ To use this tool, make sure you have the following libraries installed:
 - tqdm: 4.64.1
 - ete3: 3.1.3
 - networkx: 2.6.3
+- six: 1.16.0
 
 Please make sure to install these dependencies before using the tool
+
+## License
+
+This package is distributed under the [Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/). Please see the [LICENSE](LICENSE) file for the full license text.

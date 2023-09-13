@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+"""
+Script Name: get_taxonomy.py
+Description: This script retrieve taxonomic lineages of a GenBank fasta file.
+Author: Mohamed S. Sarhan
+Affiliation: Institute for Biomedicine, Eurac Research, Bolzano 39100, Italy
+Contact: mohamed.sarhan@eurac.edu; m.sabrysarhan@gmail.com
+Date Created: August 21, 2023
+Version: 1.0
+"""
 import gzip
 from collections import defaultdict
 from tqdm import tqdm  # Import tqdm for loading bars
