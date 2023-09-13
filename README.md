@@ -2,7 +2,39 @@
 
 Taxonize_genbank is a python package useful to download, filter, and curated the Genbank non-redundant protein and nucleotide databases, based on a given taxonomy ID (TaxID) and/or list of keywords.
 
-It has three main scripts:
+## Installation
+
+Follow these steps to clone this repository and use the provided scripts:
+
+### Dependencies
+
+To use this tool, make sure you have the following libraries installed:
+
+- Python 3.7 or higher
+- Biopython: 1.81
+- tqdm: 4.64.1
+- ete3: 3.1.3
+- networkx: 2.6.3
+- six: 1.16.0
+
+Please make sure to install these dependencies before using the tool.
+
+Then, you can clone this repository to your local machine using `git`.
+
+Open your terminal and run the following command:
+
+```bash
+git clone https://github.com/msabrysarhan/taxonize_genbank
+```
+
+Or alternatively (recomended), you can install `taxonize_gb` using using `pip`:
+
+```bash
+pip install taxonize-gb
+```
+## Usage
+
+`Taxonize_gb` has three main modules:
 
 1. get_db.py
 
@@ -85,37 +117,6 @@ optional arguments:
   --fasta FASTA  NCBI FASTA file to be filtered.
   --map MAP      Accession number to taxonomy IDs gzipped mapping file.
   --out OUT      Path to output file to write the taxonomic lineages of the GenBank accession numbers.
-```
-
-## Installation
-
-Follow these steps to clone this repository and use the provided scripts:
-
-### Dependencies
-
-To use this tool, make sure you have the following libraries installed:
-
-- Python 3.7 or higher
-- Biopython: 1.81
-- tqdm: 4.64.1
-- ete3: 3.1.3
-- networkx: 2.6.3
-- six: 1.16.0
-
-Please make sure to install these dependencies before using the tool.
-
-Then, you can clone this repository to your local machine using `git`.
-
-Open your terminal and run the following command:
-
-```bash
-git clone https://github.com/msabrysarhan/taxonize_genbank
-```
-
-Or alternatively (recomended), you can install `taxonize_gb` using using `pip`:
-
-```bash
-pip install taxonize-gb
 ```
 
 ## License
