@@ -1,5 +1,8 @@
 # Taxonize_genbank
 
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/taxonize-gb?label=Install%20from%20PyPi)](https://pypi.org/project/taxonize-gb/)
+
+
 Taxonize_genbank is a python package useful to download, filter, and curated the Genbank non-redundant protein and nucleotide databases, based on a given taxonomy ID (TaxID) and/or list of keywords.
 
 ## Installation
