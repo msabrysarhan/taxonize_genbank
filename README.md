@@ -89,6 +89,8 @@ optional arguments:
 
 ## Installation
 
+Follow these steps to clone this repository and use the provided scripts:
+
 ### Dependencies
 
 To use this tool, make sure you have the following libraries installed:
@@ -100,7 +102,21 @@ To use this tool, make sure you have the following libraries installed:
 - networkx: 2.6.3
 - six: 1.16.0
 
-Please make sure to install these dependencies before using the tool
+Please make sure to install these dependencies before using the tool.
+
+Then, you can clone this repository to your local machine using `git`.
+
+Open your terminal and run the following command:
+
+```bash
+git clone https://github.com/msabrysarhan/taxonize_genbank
+```
+
+Or alternatively (recomended), you can install `taxonize_gb` using using `pip`:
+
+```bash
+pip install taxonize-gb
+```
 
 ## License
 
