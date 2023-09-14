@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='taxonize_gb',
-    version='1.0.11',
+    version='1.0.12',
     description='Python package to download and filter GenBank database based on taxonomy',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
