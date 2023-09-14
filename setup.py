@@ -4,6 +4,8 @@ setup(
     name='taxonize_gb',
     version='1.0.11',
     description='Python package to download and filter GenBank database based on taxonomy',
+    long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
     author='Mohamed S. Sarhan',
     author_email='mohamed.sarhan@eurac.edu',
     url='https://github.com/msabrysarhan/taxonize_genbank',
