@@ -7,7 +7,7 @@ Taxonize_genbank is a python package useful to download, filter, and curated the
 
 ## Installation
 
-Follow these steps to clone this repository and use the provided scripts:
+
 
 ### Dependencies
 

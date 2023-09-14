@@ -2,14 +2,15 @@ from setuptools import setup, find_packages
 
 setup(
     name='taxonize_gb',
-    version='1.0.8',
+    version='1.0.11',
     description='Python package to download and filter GenBank database based on taxonomy',
     author='Mohamed S. Sarhan',
-    author_email=['mohamed.sarhan@eurac.edu','m.sabrysarhan@gmail.com']
+    author_email='mohamed.sarhan@eurac.edu',
     url='https://github.com/msabrysarhan/taxonize_genbank',
     packages=find_packages(),
     package_data = { 'taxonize_gb' : [
-        'taxonize_gb/utils/*',
+        'taxonize_gb/utils/*py',
+        'taxonize_gb/*py'
     ] },
 
     install_requires=[

@@ -9,8 +9,8 @@ Date Created: August 21, 2023
 Version: 1.0
 """
 # Python modules to be imported and used in this script
-#from utils.get_db import databases, download_db, check_out_directory
-#from utils.filter_utils import filter_acc2taxid_by_table, filter_fasta_by_acc2taxid_and_keywords, filter_fasta_by_acc2taxid
+from taxonize_gb.utils.get_db import databases, download_db, check_out_directory
+from taxonize_gb.utils.filter_utils import filter_acc2taxid_by_table, filter_fasta_by_acc2taxid_and_keywords, filter_fasta_by_acc2taxid
 import os 
 import argparse
 import tarfile
