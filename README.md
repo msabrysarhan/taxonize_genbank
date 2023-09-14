@@ -1,5 +1,5 @@
 # Taxonize_genbank
-
+![](logo.png)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/taxonize-gb?label=Install%20from%20PyPi)](https://pypi.org/project/taxonize-gb/)
 
 
