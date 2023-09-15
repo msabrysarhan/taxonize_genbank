@@ -122,6 +122,63 @@ optional arguments:
   --out OUT      Path to output file to write the taxonomic lineages of the GenBank accession numbers.
 ```
 
+### Examples
+1. **Plant non-redundant protein database**
+
+First, we need to use the `get_db` module to download the following files to a directory `databases`:
+```bash
+# The nr FASTA file
+get_db --db_name nr --out databases
+
+# The NCBI accession to taxonomy ID mapping file
+get_db --db_name prot_acc2taxid --out databases
+
+# The PDB accession to taxonomy ID mapping file
+get_db --db_name pdb_acc2taxid --out databases
+
+# The NCBI taxonomy database
+get_db --db_name taxdb --out databases
+```
+
+Now that we have the databases downloaded, we can use `taxonize_gb` to filter the nr FASTA to keep only the plant protein records:
+```bash
+# we use the taxid of Viridiplantae (33090) and we write the outputs to a directory "plant_nr"
+taxonize_gb --db nr --db_path databases/nr.gz --taxdb databases/taxdump.tar.gz --prot_acc2taxid databases/prot.accession2taxid.gz --pdb_acc2taxid pdb.accession2taxid.gz --taxid 33090 --out plant_nr
+```
+
+2. **Insects non-redundant nucleotide database**
+
+Similar to the previous example, we first need to use the `get_db` to download the database file:
+
+```bash
+# The nt FASTA file
+get_db --db_name nt --out databases
+
+# The GenBank accession to taxonomy ID mapping file
+get_db --db_name nucl_gb_acc2taxid --out databases
+
+# The WGS accession to taxonomy ID mapping file
+get_db --db_name nucl_wgs_acc2taxid --out databases
+
+# The NCBI taxonomy database
+get_db --db_name taxdb --out databases
+```
+Now we can use the `taxonize_gb` to filter the nt FASTA to keep only the insects nucleotide records:
+
+```bash
+# we use the taxid of Insecta (50557) and we write the outputs to a directory "insects_nt"
+taxonize_gb --db nt --db_path databases/nt.gz --taxdb databases/taxdump.tar.gz --nucl_gb_acc2taxid databases/nucl_gb.accession2taxid.gz --nucl_wgs_acc2taxid databases/nucl_wgs.accession2taxid.gz --taxid 50557 --out insect_nt
+```
+
+3. **Nematodes mitochondrial genomes**
+
+We can use the databases we downloaded in the previous steps, then we can proceed to the next step to use the `taxonize_db` with the flag `--keywords mitochondrion,'complete genome'` to find the header that contain both words, as follow:
+ 
+```bash
+# we use the taxid of Nematoda (6231) and we write the outputs to a directory "nematoda_mito"
+taxonize_gb --db nt --db_path databases/nt.gz --taxdb databases/taxdump.tar.gz --nucl_gb_acc2taxid databases/nucl_gb.accession2taxid.gz --nucl_wgs_acc2taxid databases/nucl_wgs.accession2taxid.gz --taxid 6231 --keywords mitochondrion,'complete genome' --out nematoda_mito
+```
+
 ## License
 
 This package is distributed under the [Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/). Please see the [LICENSE](LICENSE) file for the full license text.
