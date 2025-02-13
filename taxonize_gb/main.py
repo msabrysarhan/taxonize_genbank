@@ -14,7 +14,7 @@ from taxonize_gb.utils.filter_utils import filter_acc2taxid_by_table, filter_fas
 import os 
 import argparse
 import tarfile
-import gzip
+import isal.igzip as gzip  
 import networkx as nx
 from tqdm import tqdm
 
@@ -173,6 +173,12 @@ def get_all_subtaxids(taxonomic_graph, input_taxid):
     sub_taxids.add(input_taxid)
     return sub_taxids
 
+def parse_taxids(taxid_str):
+    return [str(taxid) for taxid in taxid_str.split(',')]
+
+def read_taxids_from_file(file_path):
+    with open(file_path, 'r') as file:
+        return [str(line.strip()) for line in file]
 
 
 
@@ -185,7 +191,10 @@ def main():
     parser.add_argument("--pdb_acc2taxid", required=False, help="Path to gzipped PDB protein accession number to taxid mapping file from the NCBI; works with --db nr (if not provided, the latest version will be downloaded from the NCBI", default=False)
     parser.add_argument("--nucl_gb_acc2taxid", required=False, help="Path to gzipped Genbank nucleotide accession number to taxid mapping file from the NCBI; works with --db nt (if not provided, the latest version will be downloaded from the NCBI", default=False)
     parser.add_argument("--nucl_wgs_acc2taxid", required=False, help="Path to gzipped whole genome sequence accession number to taxid mapping file from the NCBI; works with --db nt (if not provided, the latest version will be downloaded from the NCBI", default=False)
-    parser.add_argument("--taxid", required=False, help="Target taxonomy ID to filter for", default=1)
+    parser.add_argument("--taxid", required=False, type=str, help="Target taxonomy IDs to filter for, separated by commas", default="1")
+    parser.add_argument("--exclude_taxid", required=False, type=str, help="Taxonomy IDs to exclude, separated by commas", default="")
+    parser.add_argument("--taxid_file", required=False, help="File containing target taxonomy IDs to filter for, one per line")
+    parser.add_argument("--exclude_taxid_file", required=False, help="File containing taxonomy IDs to exclude, one per line")
     parser.add_argument("--keywords", required=False, help="keywords to be included in the fasta headers of the target taxonomy ID", default="")
     parser.add_argument("--out", required=True, help="Path to output directory where the results are to be stored.", default=False)
     args = parser.parse_args()
@@ -197,7 +206,16 @@ def main():
     taxonomy_dict = check_taxdb(taxonomy_db, args.out)
 
     # check taxid
-    input_taxid = args.taxid
+    if args.taxid_file:
+        input_taxids = read_taxids_from_file(args.taxid_file)
+    else:
+        input_taxids = parse_taxids(args.taxid)
+
+    if args.exclude_taxid_file:
+        exclude_taxids = read_taxids_from_file(args.exclude_taxid_file)
+    else:
+        exclude_taxids = parse_taxids(args.exclude_taxid)
+    
     
     # Check the seq reference db
     db_name = check_db(args.db)
@@ -212,29 +230,40 @@ def main():
         acc2taxid_2 = check_input(args.pdb_acc2taxid, 'pdb_acc2taxid', args.out)
     
 
+
     ## Now we have everything -- Let's go
     # 1- Filter the taxonomy and get all taxids file
     taxid_to_parent, rank_map = read_nodes_dmp(taxonomy_dict["nodes"])
     taxid_to_name = read_names_dmp(taxonomy_dict["names"])
     taxonomic_graph = build_taxonomic_graph(taxid_to_parent)
-    sub_taxids = get_all_subtaxids(taxonomic_graph, str(input_taxid))
-    filtered_taxdb = os.path.join(args.out, "filtered_taxid_"+str(args.taxid)+".tsv")
+
+    exclude_taxids_list = []
+    for taxid in exclude_taxids:
+        exclude_taxids_list += get_all_subtaxids(taxonomic_graph, str(taxid))
+
+    filtered_taxdb = os.path.join(args.out, "filtered_taxid"+".tsv")
     with open(filtered_taxdb, "w") as out_file:
         out_file.write("TaxID\tScientific Name\n")
-
-        for taxid in tqdm(sub_taxids, desc="Writing taxids to file", unit=" taxids"):
-            name = taxid_to_name.get(taxid, "Unknown")
-            out_file.write(f"{taxid}\t{name}\n")
-    print(f"Filtered {args.taxid} nodes written to", filtered_taxdb)
+        for taxid in input_taxids:
+            sub_taxids = get_all_subtaxids(taxonomic_graph, str(taxid))
+            print(f"Taxid {taxid} has {len(sub_taxids)} subtaxids")
+                        
+            for sub_taxid in tqdm(sub_taxids, desc="Writing taxids to file", unit=" taxids"):
+                if sub_taxid not in exclude_taxids_list:
+                    name = taxid_to_name.get(sub_taxid, "Unknown")
+                    out_file.write(f"{sub_taxid}\t{name}\n")
+                else: 
+                    print(f"Excluding taxid {sub_taxid}")
+        print(f"Filtered taxids nodes written to {filtered_taxdb}")
 
 
     # 2 - Filter the taxid files - 2 for the nt and 2 for the nr 
-    filteredAcc2taxid = os.path.join(args.out, f"taxid{args.taxid}_{db_name}.accession2taxid.gz")
+    filteredAcc2taxid = os.path.join(args.out, f"filtered_taxid2accessions_{db_name}.accession2taxid.gz")
     filter_acc2taxid_by_table(acc2taxid_1, acc2taxid_2, filtered_taxdb, filteredAcc2taxid)
 
     # 3- Filter the ref database (fasta file) based on the acc2taxid file
 
-    filteredFasta = os.path.join(args.out, f"taxid{args.taxid}_{db_name}.fasta.gz")
+    filteredFasta = os.path.join(args.out, f"filtered_taxid_{db_name}_sequences.fasta.gz")
 
     #keywords conditions
     if args.keywords == False:

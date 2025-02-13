@@ -8,11 +8,12 @@ Contact: mohamed.sarhan@eurac.edu; m.sabrysarhan@gmail.com
 Date Created: August 21, 2023
 Version: 1.0
 """
-import gzip
+import isal.igzip as gzip  
 from collections import defaultdict
 from tqdm import tqdm  # Import tqdm for loading bars
 from ete3 import NCBITaxa
 import argparse
+import io
 
 
 def get_main_taxonomic_levels(taxid):
@@ -35,7 +36,8 @@ def get_main_taxonomic_levels(taxid):
 def parse_acc2taxonomy(acc2tax_file):
     acc2tax = {}
     with gzip.open(acc2tax_file, 'rt') as f:
-        for line in tqdm(f, desc="Reading accessions"):
+        buf = io.BufferedReader(f, buffer_size=10**7)
+        for line in tqdm(buf, desc="Reading accessions"):
             fields = line.strip().split('\t')
             acc2tax[fields[1]] = fields[2]
     return acc2tax
@@ -44,7 +46,8 @@ def taxonomize(fasta_file, acc2tax_file, output_file):
     acc2tax = parse_acc2taxonomy(acc2tax_file)
 
     with gzip.open(fasta_file, 'rt') as fasta, open(output_file, 'w') as output:
-        for line in tqdm(fasta, desc="Processing FASTA"):
+        buf = io.BufferedReader(fasta, buffer_size=10**7)
+        for line in tqdm(buf, desc="Processing FASTA"):
             if line.startswith('>'):
                 accession = line.strip().split()[0][1:]
                 if accession in acc2tax:

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='taxonize_gb',
-    version='1.0.12',
+    version='1.1.0',
     description='Python package to download and filter GenBank database based on taxonomy',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
@@ -20,7 +20,8 @@ setup(
         'tqdm==4.64.1',
         'ete3==3.1.3',
         'networkx==2.6.3',
-        'six==1.16.0'
+        'six==1.16.0', 
+        'isal==1.7.1'
     ],
     entry_points={
         "console_scripts": [
@@ -29,5 +30,6 @@ setup(
             "get_taxonomy = taxonize_gb.utils.get_taxonomy:main",
         ],
     },
+    license = 'Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0)', 
     license_files=['LICENSE']
 )
