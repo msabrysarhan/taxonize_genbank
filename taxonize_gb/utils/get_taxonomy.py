@@ -36,7 +36,7 @@ def get_main_taxonomic_levels(taxid):
 def parse_acc2taxonomy(acc2tax_file):
     acc2tax = {}
     with gzip.open(acc2tax_file, 'rt') as f:
-        buf = io.BufferedReader(f, buffer_size=10**7)
+        buf = io.BufferedReader(f, buffer_size=10**6)
         for line in tqdm(buf, desc="Reading accessions"):
             fields = line.strip().split('\t')
             acc2tax[fields[1]] = fields[2]
@@ -46,7 +46,7 @@ def taxonomize(fasta_file, acc2tax_file, output_file):
     acc2tax = parse_acc2taxonomy(acc2tax_file)
 
     with gzip.open(fasta_file, 'rt') as fasta, open(output_file, 'w') as output:
-        buf = io.BufferedReader(fasta, buffer_size=10**7)
+        buf = io.BufferedReader(fasta, buffer_size=10**6)
         for line in tqdm(buf, desc="Processing FASTA"):
             if line.startswith('>'):
                 accession = line.strip().split()[0][1:]

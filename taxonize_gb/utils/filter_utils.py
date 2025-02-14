@@ -47,14 +47,14 @@ def filter_fasta_by_acc2taxid(input_fasta, output_fasta, table_file):
     """
     values_to_filter = set()
     with gzip.open(table_file, "rt") as table:
-        buf = io.BufferedReader(table, buffer_size=10**7)
+        buf = io.BufferedReader(table, buffer_size=10**6)
         for line in tqdm(buf,  desc="Processing accessions", unit="lines"):
             value = line.strip().split()[1]
             values_to_filter.add(value)
 
     with gzip.open(input_fasta, "rt") as input_handle:
         with gzip.open(output_fasta, 'wt') as output_handle:
-            buf = io.BufferedReader(input_handle, buffer_size=10**7)
+            buf = io.BufferedReader(input_handle, buffer_size=10**6)
 
             # Use tqdm to wrap the loop for the loading bar
             for record in tqdm(SeqIO.parse(buf, "fasta"), desc="Processing sequences", unit="seq"):
@@ -82,14 +82,14 @@ def filter_fasta_by_acc2taxid_and_keywords(input_fasta, output_fasta, table_file
     """
     values_to_filter = set()
     with gzip.open(table_file, "rt") as table:
-        buf = io.BufferedReader(table, buffer_size=10**7)
+        buf = io.BufferedReader(table, buffer_size=10**6)
         for line in tqdm(buf,  desc="Processing accessions", unit="lines"):
             value = line.strip().split()[1]
             values_to_filter.add(value)
 
     with gzip.open(input_fasta, "rt") as input_handle:
         with gzip.open(output_fasta, 'wt') as output_handle:
-            buf = io.BufferedReader(input_handle, buffer_size=10**7)
+            buf = io.BufferedReader(input_handle, buffer_size=10**6)
 
             # Use tqdm to wrap the loop for the loading bar
             for record in tqdm(SeqIO.parse(buf, "fasta"), desc="Processing sequences", unit="seq"):
@@ -122,7 +122,7 @@ def filter_acc2taxid_by_table(acc2taxid_path, acc2taxid_path2, taxidList_path, f
     target_taxids = set()
     
     with open(taxidList_path, "r") as taxid_list_file:
-        buf = io.BufferedReader(taxid_list_file, buffer_size=10**7)
+        buf = io.BufferedReader(taxid_list_file, buffer_size=10**6)
         for line in buf:
             taxid = line.strip().split()[0]
             target_taxids.add(taxid)
@@ -130,7 +130,7 @@ def filter_acc2taxid_by_table(acc2taxid_path, acc2taxid_path2, taxidList_path, f
     with gzip.open(acc2taxid_path, "rt") as acc2taxid_file, \
         gzip.open(filtered_acc2taxid_path, "wt") as filtered_acc2taxid_file:
         filtered_acc2taxid_file.write("accession\taccession.version\ttaxid\tgi\n")
-        buf = io.BufferedReader(acc2taxid_file, buffer_size=10**7)
+        buf = io.BufferedReader(acc2taxid_file, buffer_size=10**6)
 
         for line in tqdm(buf, desc="Processing acc2taxid", unit=" lines"):
             ver, acc, taxid, gi = line.strip().split("\t")
@@ -138,7 +138,7 @@ def filter_acc2taxid_by_table(acc2taxid_path, acc2taxid_path2, taxidList_path, f
                 filtered_acc2taxid_file.write(f"{ver}\t{acc}\t{taxid}\t{gi}\n")
 
         with gzip.open(acc2taxid_path2, "rt") as acc2taxid_file2:
-            buf = io.BufferedReader(acc2taxid_file2, buffer_size=10**7)
+            buf = io.BufferedReader(acc2taxid_file2, buffer_size=10**6)
             for line in tqdm(buf, desc="Processing acc2taxid", unit=" lines"):
                 ver, acc, taxid, gi = line.strip().split("\t")
                 if taxid in target_taxids:
