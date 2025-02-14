@@ -14,7 +14,7 @@ from taxonize_gb.utils.filter_utils import filter_acc2taxid_by_table, filter_fas
 import os 
 import argparse
 import tarfile
-import isal.igzip as gzip  
+import gzip as gzip  
 import networkx as nx
 from tqdm import tqdm
 

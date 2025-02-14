@@ -8,9 +8,9 @@ Contact: mohamed.sarhan@eurac.edu; m.sabrysarhan@gmail.com
 Date Created: August 21, 2023
 Version: 1.0
 """
-import isal.igzip as gzip  
+import gzip as gzip  
 from collections import defaultdict
-from tqdm import tqdm  # Import tqdm for loading bars
+from tqdm import tqdm 
 from ete3 import NCBITaxa
 import argparse
 import io
