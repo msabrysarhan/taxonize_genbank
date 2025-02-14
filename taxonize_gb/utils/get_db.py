@@ -53,7 +53,7 @@ def download_db(db, out):
         path to the downloaded database path.
     """
     if db in databases:
-        print(f"The {db} will bw downloaded to {out}")
+        print(f"The {db} will be downloaded to {out}")
         try:
             db_url = databases[db][0]
             wget_command = ['wget', '-c', db_url, '-O', os.path.join(out, os.path.basename(db_url))]

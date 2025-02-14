@@ -4,7 +4,6 @@ from tqdm import tqdm
 import io
 
 
-
 # Filter fasta by list of keywords
 
 def filter_fasta_by_keywords(fasta_file, search_words, output_file):
@@ -122,8 +121,7 @@ def filter_acc2taxid_by_table(acc2taxid_path, acc2taxid_path2, taxidList_path, f
     target_taxids = set()
     
     with open(taxidList_path, "r") as taxid_list_file:
-        buf = io.BufferedReader(taxid_list_file, buffer_size=10**6)
-        for line in buf:
+        for line in taxid_list_file:
             taxid = line.strip().split()[0]
             target_taxids.add(taxid)
 
