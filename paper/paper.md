@@ -14,7 +14,7 @@ authors:
     affiliation: "1, 2"
     corresponding: true
   - name: Michele Filosi
-    orcid: 
+    orcid: 0000-0002-3872-347X
     affiliation: 1
   - name: Frank Maixner
     orcid: 0000-0003-2846-8994
