@@ -169,6 +169,8 @@ def get_all_subtaxids(taxonomic_graph, input_taxid):
     Returns:
         list of children taxids
     """
+    if not input_taxid or input_taxid not in taxonomic_graph:
+        return []
     sub_taxids = nx.descendants(taxonomic_graph, input_taxid)
     sub_taxids.add(input_taxid)
     return sub_taxids
