@@ -190,6 +190,10 @@ taxonize_gb.py --db nt
 
 ---
 
+## Contributing
+
+We welcome contributions to the **Taxonize_genbank** project! Please see the [Contributing Guidelines](CONTRIBUTING.md) for more details.
+
 ## License
 
 This project is licensed under the **MIT License**.  
